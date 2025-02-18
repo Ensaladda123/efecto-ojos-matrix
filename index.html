@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Matrix Effect</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: black;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            position: relative;
+        }
+
+        #matrix {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="matrix"></canvas>
+    
+    <script>
+        const canvas = document.getElementById("matrix");
+        const ctx = canvas.getContext("2d");
+        const imageUrl = "https://raw.githubusercontent.com/Ensaladda123/aprendiendo/main/DALL%C2%B7E%202025-02-18%2011.32.48%20-%20A%20digital%20illustration%20of%20a%20cat's%20eyes%20glowing%20in%20the%20dark.%20The%20eyes%20are%20intense%20and%20piercing%2C%20with%20a%20neon%20green%20glow%2C%20set%20against%20a%20completely%20black%20.webp";
+        const image = new Image();
+        image.src = imageUrl;
+
+        function ajustarTamanio() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+
+        window.addEventListener("resize", ajustarTamanio);
+        ajustarTamanio();
+
+        const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!?";
+        const fontSize = 18;
+        const columns = Math.floor(canvas.width / fontSize);
+        const drops = Array(columns).fill(0);
+
+        image.onload = () => {
+            const imageCanvas = document.createElement("canvas");
+            const imageCtx = imageCanvas.getContext("2d");
+            imageCanvas.width = canvas.width;
+            imageCanvas.height = canvas.height;
+            imageCtx.drawImage(image, 0, 0, canvas.width, canvas.height);
+            const imageData = imageCtx.getImageData(0, 0, canvas.width, canvas.height);
+            
+            function drawMatrix() {
+                ctx.fillStyle = "rgba(0, 0, 0, 0.1)";
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+                ctx.fillStyle = "#00FF00";
+                ctx.font = `${fontSize}px monospace`;
+
+                for (let i = 0; i < drops.length; i++) {
+                    const x = i * fontSize;
+                    const y = drops[i] * fontSize;
+                    const pixelIndex = (Math.floor(y) * imageData.width + Math.floor(x)) * 4;
+                    const brightness = imageData.data[pixelIndex] + imageData.data[pixelIndex + 1] + imageData.data[pixelIndex + 2];
+                    
+                    if (brightness > 200) {
+                        const text = letters[Math.floor(Math.random() * letters.length)];
+                        ctx.fillText(text, x, y);
+                    }
+
+                    if (Math.random() > 0.5) {
+                        drops[i]++;
+                    }
+
+                    if (drops[i] * fontSize > canvas.height) {
+                        drops[i] = 0;
+                    }
+                }
+            }
+
+            setInterval(drawMatrix, 35);
+        };
+    </script>
+</body>
+</html>
