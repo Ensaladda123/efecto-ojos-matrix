@@ -37,7 +37,7 @@
     <script>
         const canvas = document.getElementById("matrix");
         const ctx = canvas.getContext("2d");
-        const imageUrl = "https://raw.githubusercontent.com/Ensaladda123/aprendiendo/refs/heads/main/DALL%C2%B7E%202025-02-18%2011.32.48%20-%20A%20digital%20ilustracion%20of%20a%20cat's%20ey es%20brillante%20en%20el%20oscuro.%20Los%20ojos%20son%20intensos%20y%20piercing%2C%20con%20a%20neón%20verde%20glow%2C%20set%20contra%20a%20completamente%20negro%20.webp";
+        const imageUrl = "https://raw.githubusercontent.com/Ensaladda123/aprendiendo/main/DALL%C2%B7E%202025-02-18%2011.32.48%20-%20A%20digital%20illustration%20of%20a%20cat's%20eyes%20glowing%20in%20the%20dark.%20The%20eyes%20are%20intense%20and%20piercing%2C%20with%20a%20neon%20green%20glow%2C%20set%20against%20a%20completely%20black%20.webp";
         const image = new Image();
         image.src = imageUrl;
         image.crossOrigin = "Anonymous";
@@ -73,30 +73,26 @@
                 for (let i = 0; i < drops.length; i++) {
                     const x = i * fontSize;
                     const y = drops[i] * fontSize;
-                    
                     if (y < canvas.height) {
                         const pixelIndex = (Math.floor(y) * imageData.width + Math.floor(x)) * 4;
-                        const r = imageData.data[pixelIndex];
-                        const g = imageData.data[pixelIndex + 1];
-                        const b = imageData.data[pixelIndex + 2];
-                        const brightness = (r + g + b) / 3;
-                        
-                        if (brightness > 50) { // Ajustar este valor para mayor visibilidad
-                            const text = letters[Math.floor(Math.random() * letters.length)];
-                            ctx.fillText(text, x, y);
+                        if (pixelIndex < imageData.data.length) {
+                            const r = imageData.data[pixelIndex];
+                            const g = imageData.data[pixelIndex + 1];
+                            const b = imageData.data[pixelIndex + 2];
+                            const brightness = (r + g + b) / 3;
+                            
+                            if (brightness > 30) {  // Ajustamos el umbral
+                                const text = letters[Math.floor(Math.random() * letters.length)];
+                                ctx.fillText(text, x, y);
+                            }
                         }
                     }
-
-                    if (Math.random() > 0.5) {
-                        drops[i]++;
-                    }
-
+                    drops[i]++;
                     if (drops[i] * fontSize > canvas.height) {
                         drops[i] = 0;
                     }
                 }
             }
-
             setInterval(drawMatrix, 35);
         };
     </script>
