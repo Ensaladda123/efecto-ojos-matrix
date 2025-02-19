@@ -81,7 +81,7 @@
                             const b = imageData.data[pixelIndex + 2];
                             const brightness = (r + g + b) / 3;
                             
-                            if (brightness > 30) {  // Ajustamos el umbral
+                            if (brightness < 50) {  // Ahora solo cae en las áreas oscuras
                                 const text = letters[Math.floor(Math.random() * letters.length)];
                                 ctx.fillText(text, x, y);
                             }
